@@ -1,0 +1,147 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "Represents a potential customer who requested a quote or booking",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the lead"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the customer"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the customer"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the customer (optional)"
+        },
+        "address": {
+          "type": "string",
+          "description": "Service address in Geneva/Kane County"
+        },
+        "services": {
+          "type": "array",
+          "description": "Selected services (e.g. siding, one-can, two-cans, driveway)"
+        },
+        "drivewaySqFt": {
+          "type": "number",
+          "description": "Estimated square footage of driveway/sidewalk if selected"
+        },
+        "totalEstimate": {
+          "type": "number",
+          "description": "Total estimated cost calculated"
+        },
+        "scheduledDate": {
+          "type": "string",
+          "description": "Optional selected appointment date (YYYY-MM-DD)"
+        },
+        "scheduledTimeSlot": {
+          "type": "string",
+          "description": "Optional selected appointment time slot (e.g. Morning, Afternoon)"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "contacted", "scheduled", "completed"],
+          "description": "Current status of the lead"
+        },
+        "paymentOption": {
+          "type": "string",
+          "enum": ["pay_later", "pre_pay_save_10"],
+          "description": "How the customer prefers to pay"
+        },
+        "paymentStatus": {
+          "type": "string",
+          "enum": ["unpaid", "paid"],
+          "description": "Payment status"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the lead was submitted"
+        }
+      },
+      "required": ["name", "phone", "address", "services", "totalEstimate", "status"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "A blog post or featured advice article for SEO and trust",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": ["title", "slug", "content", "date", "summary"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer review/testimonial from a local resident",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        }
+      },
+      "required": ["name", "location", "rating", "text", "date", "verified"]
+    }
+  },
+  "firestore": {
+    "leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Collection of all sales leads and booking requests"
+    },
+    "blogPosts/{postId}": {
+      "schema": "BlogPost",
+      "description": "SEO blog posts written by the College Dudes"
+    },
+    "reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Verified local reviews and testimonials"
+    }
+  }
+}

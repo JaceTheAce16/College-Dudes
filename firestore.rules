@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Global Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- Entity Validation Helpers ---
+    function isValidLead(data) {
+      return data.name is string && data.name.size() <= 100
+        && data.phone is string && data.phone.size() <= 30
+        && (!data.keys().contains('email') || (data.email is string && data.email.size() <= 100))
+        && data.address is string && data.address.size() <= 200
+        && data.services is list && data.services.size() <= 10
+        && (!data.keys().contains('drivewaySqFt') || data.drivewaySqFt is number)
+        && data.totalEstimate is number
+        && data.status in ["pending", "contacted", "scheduled", "completed"]
+        && data.paymentOption in ["pay_later", "pre_pay_save_10"]
+        && data.paymentStatus in ["unpaid", "paid"]
+        && data.timestamp is string
+        && (!data.keys().contains('scheduledDate') || (data.scheduledDate is string && data.scheduledDate.size() <= 30))
+        && (!data.keys().contains('scheduledTimeSlot') || (data.scheduledTimeSlot is string && data.scheduledTimeSlot.size() <= 50))
+        && (!data.keys().contains('syncedToCalendar') || (data.syncedToCalendar is bool));
+    }
+
+    function isValidReview(data) {
+      return data.name is string && data.name.size() <= 100
+        && data.location is string && data.location.size() <= 100
+        && data.rating is number && data.rating >= 1 && data.rating <= 5
+        && data.text is string && data.text.size() <= 1000
+        && data.date is string && data.date.size() <= 30
+        && data.verified is bool;
+    }
+
+    // --- Collections ---
+
+    // Leads: allow create; allow get; allow update of payment preferences and total estimates
+    match /leads/{leadId} {
+      allow create: if isValidId(leadId) 
+        && isValidLead(incoming())
+        && incoming().keys().hasAll(['name', 'phone', 'address', 'services', 'totalEstimate', 'status', 'paymentOption', 'paymentStatus', 'timestamp'])
+        && incoming().keys().size() >= 9 && incoming().keys().size() <= 14;
+        
+      allow list, get: if true;
+      
+      allow update: if isValidId(leadId)
+        && isValidLead(incoming())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['paymentOption', 'totalEstimate', 'syncedToCalendar', 'scheduledDate', 'scheduledTimeSlot', 'status']);
+        
+      allow delete: if false;
+    }
+
+    // Blog posts: read by anyone; no public writes
+    match /blogPosts/{postId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Reviews: read by anyone; public can submit formatted reviews
+    match /reviews/{reviewId} {
+      allow list, get: if true;
+      
+      allow create: if isValidId(reviewId)
+        && isValidReview(incoming())
+        && incoming().keys().hasAll(['name', 'location', 'rating', 'text', 'date', 'verified'])
+        && incoming().keys().size() == 6;
+        
+      allow update, delete: if false;
+    }
+  }
+}
