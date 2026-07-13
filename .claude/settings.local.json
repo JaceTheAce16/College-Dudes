@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/jacejessup/antigravity/College-Dudes-Power-Cleaning/public)",
+      "Bash(cp \"/Users/jacejessup/antigravity/College-Dudes-Power-Cleaning/assets/42392E8C-2565-4225-A2B5-0286E5031EC7_1_105_c.jpeg\" /Users/jacejessup/antigravity/College-Dudes-Power-Cleaning/public/owner-jace-jessup.jpeg)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git add *)",
+      "Bash(git restore *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
