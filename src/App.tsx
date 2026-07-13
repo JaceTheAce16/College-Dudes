@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import QuoteCalculator from './components/QuoteCalculator';
 import ReviewsSection from './components/ReviewsSection';
 import BlogSection from './components/BlogSection';
-import OwnerDashboard from './components/OwnerDashboard';
 import Footer from './components/Footer';
 import { RouterProvider, usePath, Link } from './components/Router';
 import { BLOG_POSTS } from './data/blogPosts';
@@ -264,24 +263,6 @@ function AppContent() {
                 </p>
               </div>
               <BlogSection hideHeader={true} noPadding={true} />
-            </div>
-          </div>
-        ) : path === '/dashboard' ? (
-          /* Render Owner Dashboard Admin Portal */
-          <div className="py-16 bg-brand-bg px-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center space-y-3 max-w-2xl mx-auto mb-12">
-                <span className="inline-block bg-brand-navy text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest">
-                  Secure Owner Interface
-                </span>
-                <h1 className="text-4xl font-black text-brand-navy tracking-tight uppercase">
-                  College Dudes Admin Portal
-                </h1>
-                <p className="text-slate-600">
-                  Secure sign-in for co-founders to review submitted service quotes, contact leads, and coordinate clean schedules.
-                </p>
-              </div>
-              <OwnerDashboard />
             </div>
           </div>
         ) : (
@@ -620,9 +601,6 @@ function AppContent() {
 
             {/* Advice Portal / Blog */}
             <BlogSection />
-
-            {/* Owner Admin & Calendar Sync Portal */}
-            <OwnerDashboard />
           </>
         )}
       </main>
