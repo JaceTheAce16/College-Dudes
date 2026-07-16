@@ -43,7 +43,7 @@ if (!firebaseConfig.apiKey) {
       appId: configData.appId,
     };
     if (!databaseId) {
-      databaseId = configData.firestoreDatabaseId || (configData as any).databaseId;
+      databaseId = (configData as any).firestoreDatabaseId || (configData as any).databaseId;
     }
   } catch (error) {
     console.warn("Firebase credentials not found in environment variables or firebase-applet-config.json. Please configure them in your environment.");

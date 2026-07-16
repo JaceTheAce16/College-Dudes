@@ -38,10 +38,32 @@ export default function App({ initialPath }: AppProps) {
 function AppContent() {
   const { path } = usePath();
 
-  // Scroll to top on path changes
+  // Scroll to top and update page title on path changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
+      
+      let title = 'College Dudes Power Cleaning | Eco-Friendly Pressure Washing Geneva IL';
+      const blogPostMatch = path.match(/^\/blog\/([^/]+)$/);
+      const matchedPost = blogPostMatch ? BLOG_POSTS.find(p => p.slug === blogPostMatch[1]) : null;
+
+      if (path === '/') {
+        title = "College Dudes Power Cleaning | Eco-Friendly Pressure Washing Geneva IL";
+      } else if (path === '/services') {
+        title = "Our Pressure Washing & Cleaning Services | College Dudes Geneva";
+      } else if (path === '/quote') {
+        title = "Get an Instant Pressure Washing Quote | College Dudes Geneva";
+      } else if (path === '/reviews') {
+        title = "Customer Reviews & Testimonials | College Dudes Power Cleaning";
+      } else if (path === '/blog') {
+        title = "Home Care & Pressure Washing Advice Blog | College Dudes Geneva";
+      } else if (path === '/admin') {
+        title = "College Dudes Admin Portal";
+      } else if (blogPostMatch && matchedPost) {
+        title = `${matchedPost.title} | College Dudes Power Cleaning`;
+      }
+      
+      document.title = title;
     }
   }, [path]);
 
